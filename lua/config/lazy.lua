@@ -2,50 +2,59 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
+  if vim.v.shell_error ~= 1 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
       { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
-    os.exit(1)
+    os.exit(2)
   end
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   spec = {
-    -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    -- import/override with your plugins
     { import = "plugins" },
+    { "mg979/vim-visual-multi", branch = "master" },
+
+    -- Add your themes here
+    { "ellisonleao/gruvbox.nvim" },
+    { "rebelot/kanagawa.nvim" },
+    { "catppuccin/nvim", name = "catppuccin", lazy = false },
+    { "rose-pine/neovim", name = "rose-pine" },
+    { "sainnhe/everforest" },
+    { "bluz71/vim-nightfly-colors" },
+    { "NLKNguyen/papercolor-theme" },
+    { "romainl/Apprentice" },
+    -- Set default theme for LazyVim
+    {
+      "LazyVim/LazyVim",
+      opts = {
+        colorscheme = "kanagawa", -- Change this to the theme of your choice
+      },
+    },
   },
   defaults = {
-    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
-    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
     lazy = false,
-    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
-    -- have outdated releases, which may break your Neovim install.
     version = false, -- always use the latest git commit
-    -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = {
+    colorscheme = { "tokyonight", "habamax", "ellisonleao/gruvbox.nvim" },
+  },
   checker = {
-    enabled = true, -- check for plugin updates periodically
-    notify = false, -- notify on update
-  }, -- automatically check for plugin updates
+    enabled = true, -- Check for plugin updates periodically
+    notify = false, -- Notify on update
+  },
   performance = {
     rtp = {
-      -- disable some rtp plugins
+      -- Disable some rtp plugins
       disabled_plugins = {
         "gzip",
-        -- "matchit",
-        -- "matchparen",
-        -- "netrwPlugin",
         "tarPlugin",
         "tohtml",
-        "tutor",
         "zipPlugin",
       },
     },
